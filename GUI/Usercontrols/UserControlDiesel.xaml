@@ -1,0 +1,212 @@
+﻿<UserControl x:Class="GUI.UserControlDiesel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:GUI"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid x:Name="MainGrid" Background="White">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+        <GroupBox Header="Kunde" 
+                  Grid.Column="0"
+                  Grid.Row="0"
+                  Grid.ColumnSpan="4"
+                  Grid.RowSpan="4"
+                  Margin="3">
+            <Grid>
+                <ListView Grid.Row="0"
+                          Grid.Column="0"
+                          Grid.RowSpan="12"
+                          Margin="3"
+                          ItemsSource="{Binding listCustomers}"
+                          SelectedItem="{Binding selectedCustomer}"
+                          SelectedValue="{Binding selectedCustomer}">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Navn"
+                                            Width="auto"
+                                            DisplayMemberBinding="{Binding name}" />
+                            <GridViewColumn Header="By"
+                                            Width="auto"
+                                            DisplayMemberBinding="{Binding city}" />
+                            <GridViewColumn Header="Land"
+                                            Width="auto"
+                                            DisplayMemberBinding="{Binding country.country}" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Grid>
+        </GroupBox>
+        <GroupBox Header="Leverandør"
+                  Grid.Column="0"
+                  Grid.Row="4"
+                  Grid.ColumnSpan="4"
+                  Grid.RowSpan="4"
+                  Margin="3">
+            <Grid>
+                <ListView Grid.Row="0"
+                          Grid.Column="0"
+                          Grid.RowSpan="12"
+                          Margin="3"
+                          ItemsSource="{Binding listSuppliers}"
+                          SelectedItem="{Binding selectedSupplier}"
+                          SelectedValue="{Binding selectedSupplier}">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Firma"
+                                            Width="auto"
+                                            DisplayMemberBinding="{Binding firmName}" />
+                            <GridViewColumn Header="By"
+                                            Width="auto"
+                                            DisplayMemberBinding="{Binding city}" />
+                            <GridViewColumn Header="Land"
+                                            Width="auto"
+                                            DisplayMemberBinding="{Binding country.country}" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Grid>
+        </GroupBox>
+        <Label Grid.Column="2"
+               Grid.Row="8"
+               Content="Dagspris på DIESEL i USD:"
+               FontSize="15"
+               FontWeight="Bold"
+               Margin="3"
+               VerticalContentAlignment="Center"/>
+        <Label Grid.Column="3"
+               Grid.Row="8"
+               Content="{Binding dieselPrice.price}"
+               FontSize="16"
+               FontWeight="Bold"
+               Margin="3"
+               VerticalContentAlignment="Center" />
+        <Label Grid.Column="0"
+               Grid.Row="8"
+               Content="Antal liter tanket:"
+               Margin="3"
+               FontSize="16"
+               FontWeight="Bold"
+               HorizontalContentAlignment="Right"
+               VerticalContentAlignment="Center" />
+        <TextBox Grid.Column="1"
+                 Grid.Row="8"
+                 Text="{Binding volume, UpdateSourceTrigger=PropertyChanged}"
+                 Margin="3"
+                 FontSize="16"
+                 FontWeight="Bold"
+                 IsReadOnly="False"
+                 HorizontalContentAlignment="Center"
+                 VerticalContentAlignment="Center" />
+        <Label Grid.Column="0"
+               Grid.Row="9"
+               Content="Kundens pris:"
+               Margin="3"
+               FontSize="16"
+               FontWeight="Bold"
+               HorizontalContentAlignment="Right"
+               VerticalContentAlignment="Center" />
+        <Label Grid.Column="0"
+               Grid.Row="10"
+               Content="Leverandør betaling:"
+               Margin="3"
+               FontSize="16"
+               FontWeight="Bold"
+               HorizontalContentAlignment="Right"
+               VerticalContentAlignment="Center" />
+        <Label Grid.Column="0"
+               Grid.Row="11"
+               Content="Egen fortjenste:"
+               Margin="3"
+               FontSize="16"
+               FontWeight="Bold"
+               HorizontalContentAlignment="Right"
+               VerticalContentAlignment="Center" />
+        <Label Grid.Column="1"
+               Grid.Row="9"
+               Content="{Binding order.customerRate}"
+               Margin="3"
+               FontSize="16"
+               FontWeight="Bold"
+               HorizontalContentAlignment="Right"
+               VerticalContentAlignment="Center" />
+        <Label Grid.Column="1"
+               Grid.Row="10"
+               Content="{Binding order.supplierRate}"
+               Margin="3"
+               FontSize="16"
+               FontWeight="Bold"
+               HorizontalContentAlignment="Right"
+               VerticalContentAlignment="Center" />
+        <Label Grid.Column="1"
+               Grid.Row="11"
+               Content="{Binding order.ownProfit}"
+               Margin="3"
+               FontSize="16"
+               FontWeight="Bold"
+               HorizontalContentAlignment="Right"
+               VerticalContentAlignment="Center" />
+        <Label Grid.Column="2"
+               Grid.Row="9"
+               Content="{Binding order.customer.country.currencyCode}"
+               Margin="3"
+               FontSize="16"
+               FontWeight="Bold"
+               HorizontalContentAlignment="Left"
+               VerticalContentAlignment="Center" />
+        <Label Grid.Column="2"
+               Grid.Row="10"
+               Content="{Binding order.supplier.country.currencyCode}"
+               Margin="3"
+               FontSize="16"
+               FontWeight="Bold"
+               HorizontalContentAlignment="Left"
+               VerticalContentAlignment="Center" />
+        <Label Grid.Column="2"
+               Grid.Row="11"
+               Content="DKK"
+               Margin="3"
+               FontSize="16"
+               FontWeight="Bold"
+               HorizontalContentAlignment="Left"
+               VerticalContentAlignment="Center" />
+        <Grid Grid.Row="9"
+              Grid.Column="3"
+              Grid.RowSpan="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+            <Button x:Name="SaveTrade"
+                    Grid.Row="0"
+                    Content="Gennemfør handel"
+                    FontSize="16"
+                    FontWeight="Bold"
+                    Margin="3,1" />
+            <Button x:Name="RegredTrade"
+                    Grid.Row="1"
+                    Content="Fortryd handel"
+                    Margin="53,14" />
+        </Grid>
+    </Grid>
+</UserControl>
