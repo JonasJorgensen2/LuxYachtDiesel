@@ -22,6 +22,8 @@ namespace BIZ
         private ClassSupplier _fallbackSupplier;
         private ClassOrder _order;
         private ClassDieselPrice _dieselPrice;
+        private bool _editingLock;
+        private List<ClassCountry> _ListCountries;
         public ClassBIZ()
         {
 			volume=0;
@@ -29,13 +31,14 @@ namespace BIZ
             dieselPrice= new ClassDieselPrice();
 			_classDB = new ClassLuxYachtDieselDB();
 			currency = new ClassCurrency();        
-            listCustomers = new List<ClassCustomer>(_classDB.GetAllCustomersFromDB());
+            listCustomers = new List<ClassCustomer>(GetAllCustomerForListFromDB());
 			selectedCustomer = new ClassCustomer();
 			fallbackCustomer = new ClassCustomer();
-			listSuppliers=new List<ClassSupplier>(_classDB.GetAllSuppliersFromDB());
+			listSuppliers=new List<ClassSupplier>(GetAllSuppliersForListFromDB());
 			selectedSupplier= new ClassSupplier();
 			fallbackSupplier=new ClassSupplier();
-			
+			ListCountries= new List<ClassCountry>(_classDB.GetAllCountryFromDB());
+			editingLock = true;
         }
 		
 
@@ -50,17 +53,32 @@ namespace BIZ
 					if (order != null)
 					{
 						order.volume = value;
-						if (order.customer.Id>0 && order.volume >=0 && order.supplier.Id>0)
+						if (order.customer.Id>0 && order.volume >=0 && order.supplier.Id>0 && order.price >0)
 						{
-							order.customerRate=(order.volume * order.price) * Convert.ToDouble(currency.rates[$"{order.customer.country.currencyCode}"]);
+							order.customerRate=((order.volume * order.price)+(0.148 * (order.volume * order.price))) * Convert.ToDouble(currency.rates[$"{order.customer.country.currencyCode}"]);
 							order.supplierRate=(order.volume * order.price) * Convert.ToDouble(currency.rates[$"{order.supplier.country.currencyCode}"]);
-							order.ownProfit=(order.volume * order.price) * Convert.ToDouble(currency.rates[$"DKK"]);
+							order.ownProfit=((order.volume * order.price)+(0.148 * (order.volume * order.price))-(order.volume *order.price)) * Convert.ToDouble(currency.rates[$"DKK"]);
                         } 
 					}
                 }
 				Notify("volume");
 			}
 		}
+		
+
+		public bool editingLock
+		{
+			get { return _editingLock; }
+			set
+			{
+				if (_editingLock != value)
+				{
+					_editingLock = value;
+				}
+				Notify("editingLock");
+			}
+		}
+
 
 
 		#region Customer Data Properties
@@ -89,16 +107,21 @@ namespace BIZ
 				if (_selectedCustomer != value)
 				{
 					_selectedCustomer = value;
-					if (selectedCustomer.Id>0)
+					if (editingLock == true)
 					{
-						order.customer= new ClassCustomer(selectedCustomer);
-                        //order.customerRate = Convert.ToDouble(currency.rates[$"{order.customer.country.currencyCode}"]);
-                        if (order.customer.Id>0 && order.volume >=0 && order.price>0)
-                        {
-                            order.customerRate=(order.volume * order.price) * Convert.ToDouble(currency.rates[$"{order.customer.country.currencyCode}"]);
+						if (selectedCustomer.Id>0)
+						{
+							order.customer= new ClassCustomer(selectedCustomer);
+							//order.customerRate = Convert.ToDouble(currency.rates[$"{order.customer.country.currencyCode}"]);
+							if (order.customer.Id>0 && order.volume >=0 && order.supplier.Id>0 && order.price >0)
+							{
+								order.customerRate=((order.volume * order.price)+(0.148 * (order.volume * order.price))) * Convert.ToDouble(currency.rates[$"{order.customer.country.currencyCode}"]);
+								order.supplierRate=(order.volume * order.price) * Convert.ToDouble(currency.rates[$"{order.supplier.country.currencyCode}"]);
+								order.ownProfit=((order.volume * order.price)+(0.148 * (order.volume * order.price))-(order.volume *order.price)) * Convert.ToDouble(currency.rates[$"DKK"]);
 
-                        }
-                    }
+							}
+						} 
+					}
                 }
 				Notify("selectedCustomer");
 			}
@@ -144,15 +167,20 @@ namespace BIZ
 				if (_selectedSupplier != value)
 				{
 					_selectedSupplier = value;
-					if (selectedSupplier.Id>0)
+					if (editingLock == true)
 					{
-						order.supplier = new ClassSupplier(_selectedSupplier);
-						//order.supplierRate = Convert.ToDouble(currency.rates[$"{order.supplier.country.currencyCode}"]);
-						if(order.supplier.Id>0 && order.volume >=0 && order.price>0)
+						if (selectedSupplier.Id>0)
 						{
-							order.supplierRate=(order.volume * order.price) * Convert.ToDouble(currency.rates[$"{order.supplier.country.currencyCode}"]);
+							order.supplier = new ClassSupplier(_selectedSupplier);
+							//order.supplierRate = Convert.ToDouble(currency.rates[$"{order.supplier.country.currencyCode}"]);
+							if (order.customer.Id>0 && order.volume >=0 && order.supplier.Id>0 && order.price >0)
+							{
+                                order.customerRate=((order.volume * order.price)+(0.148 * (order.volume * order.price))) * Convert.ToDouble(currency.rates[$"{order.customer.country.currencyCode}"]);
+                                order.supplierRate=(order.volume * order.price) * Convert.ToDouble(currency.rates[$"{order.supplier.country.currencyCode}"]);
+                                order.ownProfit=((order.volume * order.price)+(0.148 * (order.volume * order.price))-(order.volume *order.price)) * Convert.ToDouble(currency.rates[$"DKK"]);
 
-                        }
+                            }
+						} 
 					}
 				}
 				Notify("selectedSupplier");
@@ -212,7 +240,114 @@ namespace BIZ
 		}
 
 		#endregion
+		#region Customer Data Methods
 
+		public List<ClassCustomer> GetAllCustomerForListFromDB()
+		{
+			List<ClassCustomer> templist = new List<ClassCustomer>(_classDB.GetAllCustomersFromDB());
+			return templist;
+
+		}
+		public void UpdateOrInsertCustomerInDB()
+		{
+			if (selectedCustomer.Id == 0)
+			{
+				_classDB.SaveCustomersInDB(fallbackCustomer);
+				selectedCustomer = new ClassCustomer();
+				listCustomers.Clear();
+				listCustomers = new List<ClassCustomer>(GetAllCustomerForListFromDB());
+
+			}
+			else
+			{
+				_classDB.UpdateCustomerInDB(fallbackCustomer);
+                selectedCustomer = new ClassCustomer();
+                listCustomers.Clear();
+                listCustomers = new List<ClassCustomer>(GetAllCustomerForListFromDB());
+				SelectCustomerInListView(fallbackCustomer.Id);
+            }
+		}
+		public void RegretUpdateOrNewCustomerInDB()
+		{
+			selectedCustomer = new ClassCustomer();
+            listCustomers.Clear();
+            listCustomers = new List<ClassCustomer>(GetAllCustomerForListFromDB());
+            SelectCustomerInListView(fallbackCustomer.Id);
+        }
+		private void SelectCustomerInListView(int inId)
+		{
+			foreach (ClassCustomer cc in listCustomers)
+			{
+				if(cc.Id == inId)
+				{
+					selectedCustomer = cc;
+					break;
+				}
+			}
+		}
+		
+		#endregion
+		#region Supplier Data Methods
+		public List<ClassSupplier> GetAllSuppliersForListFromDB()
+		{
+			List<ClassSupplier> templist =new List<ClassSupplier>(_classDB.GetAllSuppliersFromDB());
+			return templist;
+		}
+		public void UpdateOrInsertSupplierInDB()
+		{
+			if (selectedSupplier.Id == 0)
+			{
+				_classDB.SaveSupplierInDB(fallbackSupplier);
+				selectedSupplier = new ClassSupplier();
+				listSuppliers.Clear();
+                listSuppliers=new List<ClassSupplier>(_classDB.GetAllSuppliersFromDB());
+            }
+			else
+			{
+				_classDB.UpdateSupplierInDB(fallbackSupplier);
+                selectedSupplier = new ClassSupplier();
+                listSuppliers.Clear();
+                listSuppliers=new List<ClassSupplier>(_classDB.GetAllSuppliersFromDB());
+                SelectSupplierInListView(fallbackSupplier.Id);
+            }
+		}
+		public void RegretUpdateOrNewSupplierInDB()
+		{
+			selectedSupplier = new ClassSupplier();
+            listSuppliers.Clear();
+            listSuppliers=new List<ClassSupplier>(_classDB.GetAllSuppliersFromDB());
+			SelectSupplierInListView(fallbackSupplier.Id);
+        }
+        private void SelectSupplierInListView(int inId)
+        {
+            foreach (ClassSupplier cc in listSuppliers)
+            {
+                if (cc.Id == inId)
+                {
+                    selectedSupplier = cc;
+                    break;
+                }
+            }
+        }
+		
+        #endregion
+        #region Country Data Properties
+
+
+        public List<ClassCountry> ListCountries
+		{
+			get { return _ListCountries; }
+			set
+			{
+				if (_ListCountries != value)
+				{
+					_ListCountries = value;
+				}
+				Notify("ListCountries");
+			}
+		}
+
+		#endregion
 		public ClassCurrency currency
 		{
 			get { return _currency; }

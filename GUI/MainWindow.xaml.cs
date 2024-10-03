@@ -33,6 +33,7 @@ namespace GUI
             UCDP = new UserControlDailyPrice(biz);
             UCD = new UserControlDiesel(biz);
             UCS = new UserControlSupplier(biz);
+            MainGrid.DataContext = biz;
             KundeGrid.Children.Add( UCC);
             DieselGrid.Children.Add(UCD);
             DagPrisGrid.Children.Add(UCDP);

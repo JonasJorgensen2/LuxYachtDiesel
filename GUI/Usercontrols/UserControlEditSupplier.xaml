@@ -1,0 +1,176 @@
+﻿<UserControl x:Class="GUI.Usercontrols.UserControlEditSupplier"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:GUI.Usercontrols"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="400">
+    <Grid x:Name="MainGrid" Background="White">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="60" />
+            <ColumnDefinition Width="2*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+        <Label Content="Firma:"
+               Grid.Row="1"
+               Grid.Column="0"
+               Margin="3"
+               VerticalContentAlignment="Center" />
+        <Label Content="Kontakt:"
+               Grid.Row="2"
+               Grid.Column="0"
+               Margin="3"
+               VerticalContentAlignment="Center" />
+        <Label Content="Adresse:"
+               Grid.Row="3"
+               Grid.Column="0"
+               Margin="3"
+               VerticalContentAlignment="Center" />
+        <Grid Grid.Column="0"
+              Grid.Row="4"
+              Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="60" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="55" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
+            <Label Content="Post nr:"
+                   Grid.Column="0"
+                   Margin="3"
+                   VerticalContentAlignment="Center" />
+            <Label Content="Bynavn:"
+                   Grid.Column="2"
+                   Margin="3"
+                   VerticalContentAlignment="Center" />
+            <TextBox Grid.Column="1"
+                     Text="{Binding fallbackSupplier.postalCode, UpdateSourceTrigger=PropertyChanged}"
+                     Margin="3"
+                     FontSize="16"
+                      
+                     HorizontalContentAlignment="Center"
+                     VerticalContentAlignment="Center" />
+            <TextBox Grid.Column="3"
+                     Text="{Binding fallbackSupplier.city, UpdateSourceTrigger=PropertyChanged}"
+                     Margin="3"
+                     FontSize="16"
+                      
+                     HorizontalContentAlignment="Left"
+                     VerticalContentAlignment="Center" />
+        </Grid>
+        <Label Content="Land:"
+               Grid.Row="5"
+               Grid.Column="0"
+               Margin="3"
+               VerticalContentAlignment="Center" />
+        <Label Content="Telefon:"
+               Grid.Row="6"
+               Grid.Column="0"
+               Margin="3"
+               VerticalContentAlignment="Center" />
+        <Label Content="Mail:"
+               Grid.Row="7"
+               Grid.Column="0"
+               Margin="3"
+               VerticalContentAlignment="Center" />
+
+        <TextBox Grid.Column="2"
+                 Grid.Row="1"
+                 Text="{Binding fallbackSupplier.firmName, UpdateSourceTrigger=PropertyChanged}"
+                 Margin="3"
+                 FontSize="16"
+                  
+                 HorizontalContentAlignment="Left"
+                 VerticalContentAlignment="Center" />
+        <TextBox Grid.Column="2"
+                 Grid.Row="2"
+                 Text="{Binding fallbackSupplier.contactName, UpdateSourceTrigger=PropertyChanged}"
+                 Margin="3"
+                 FontSize="16"
+                  
+                 HorizontalContentAlignment="Left"
+                 VerticalContentAlignment="Center" />
+        <TextBox Grid.Column="2"
+                 Grid.Row="3"
+                 Text="{Binding fallbackSupplier.address, UpdateSourceTrigger=PropertyChanged}"
+                 Margin="3"
+                 FontSize="16"
+                  
+                 HorizontalContentAlignment="Left"
+                 VerticalContentAlignment="Center" />
+        <ComboBox x:Name="countryComboBox"
+                  ItemsSource="{Binding ListCountries}"
+                  Grid.Column="2"
+                  Grid.Row="5"
+                  DisplayMemberPath="country"
+                  SelectedValuePath="country"
+                  SelectedValue="{Binding fallbackSupplier.country.country}"
+                  SelectedItem="{Binding fallbackSupplier.country}"
+                  IsEnabled="True"
+                  Margin="3"
+                  FontSize="16"
+                  HorizontalContentAlignment="Left"
+                  VerticalContentAlignment="Center" />
+        <TextBox Grid.Column="2"
+                 Grid.Row="6"
+                 Text="{Binding fallbackSupplier.phone, UpdateSourceTrigger=PropertyChanged}"
+                 Margin="3"
+                 FontSize="16"
+                  
+                 HorizontalContentAlignment="Left"
+                 VerticalContentAlignment="Center" />
+        <TextBox Grid.Column="2"
+                 Grid.Row="7"
+                 Text="{Binding fallbackSupplier.mailAdr, UpdateSourceTrigger=PropertyChanged}"
+                 Margin="3"
+                 FontSize="16"
+                  
+                 HorizontalContentAlignment="Left"
+                 VerticalContentAlignment="Center" />
+        <Grid Grid.Row="9"
+              Grid.Column="0"
+              Grid.ColumnSpan="2"
+              Grid.RowSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="60" />
+                <ColumnDefinition Width="150" />
+                <ColumnDefinition Width="150" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+            
+            <Button x:Name="ButtonGem"
+                    Content="Gem"
+                    Grid.Column="1"
+                    Grid.Row="0"
+                    Margin="3"
+                    Visibility="Visible"
+                    Click="ButtonGem_Click"
+                    />
+            <Button x:Name="ButtonFortryd"
+                    Content="Fortryd"
+                    Grid.Column="2"
+                    Grid.Row="0"
+                    Margin="3"
+                    Visibility="Visible"
+                    Click="ButtonFortryd_Click" />
+        </Grid>
+    </Grid>
+</UserControl>

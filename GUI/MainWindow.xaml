@@ -11,16 +11,19 @@
         Loaded="Window_Loaded">
     <Grid x:Name="MainGrid">
         <TabControl Margin="1">
-            <TabItem Header=" Salg af DIESEL">
+            <TabItem Header=" Salg af DIESEL"
+                     IsEnabled="{Binding editingLock,UpdateSourceTrigger=PropertyChanged}">
                 <Grid Background="White" x:Name="DieselGrid"/>
             </TabItem>
-            <TabItem Header="Kunde">
+            <TabItem Header="Kunde"
+                     IsEnabled="{Binding editingLock,UpdateSourceTrigger=PropertyChanged}">
                 <Grid Background="White" x:Name="KundeGrid"/>
             </TabItem>
-            <TabItem Header="Leverandør">
+            <TabItem Header="Leverandør"  IsEnabled="{Binding editingLock,UpdateSourceTrigger=PropertyChanged}">
                 <Grid Background="White" x:Name="LeverandorGrid"/>
             </TabItem>
-            <TabItem Header="Dagspris">
+            <TabItem Header="Dagspris"
+                     IsEnabled="{Binding editingLock,UpdateSourceTrigger=PropertyChanged}">
                 <Grid Background="White" x:Name="DagPrisGrid"/>
             </TabItem>
         </TabControl>

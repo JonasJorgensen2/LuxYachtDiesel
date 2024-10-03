@@ -61,6 +61,12 @@
     <Compile Include="Usercontrols\UserControlDailyPrice.xaml.cs">
       <DependentUpon>UserControlDailyPrice.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Usercontrols\UserControlEditCustomer.xaml.cs">
+      <DependentUpon>UserControlEditCustomer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Usercontrols\UserControlEditSupplier.xaml.cs">
+      <DependentUpon>UserControlEditSupplier.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Usercontrols\UserControlSupplier.xaml.cs">
       <DependentUpon>UserControlSupplier.xaml</DependentUpon>
     </Compile>
@@ -83,6 +89,14 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Usercontrols\UserControlDailyPrice.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Usercontrols\UserControlEditCustomer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Usercontrols\UserControlEditSupplier.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -74,16 +74,18 @@
                    Grid.Column="2"
                    Margin="3"
                    VerticalContentAlignment="Center" />
-            <TextBox Grid.Column="1"
-                     Text="{Binding selectedCustomer.postalCode}"
+            <Label Grid.Column="1"
+                     Content="{Binding selectedCustomer.postalCode,UpdateSourceTrigger=PropertyChanged}"
                      Margin="3"
                      FontSize="16"
+                     
                      HorizontalContentAlignment="Center"
                      VerticalContentAlignment="Center"/>
-            <TextBox Grid.Column="3"
-                     Text="{Binding selectedCustomer.city}"
+            <Label Grid.Column="3"
+                     Content="{Binding selectedCustomer.city,UpdateSourceTrigger=PropertyChanged}"
                      Margin="3"
                      FontSize="16"
+                     
                      HorizontalContentAlignment="Left"
                      VerticalContentAlignment="Center" />
         </Grid>
@@ -121,65 +123,61 @@
                     Grid.Column="1"
                     Grid.Row="0"
                     Margin="3"
-                    Visibility="Visible" />
+                    Visibility="Visible"
+                    Click="ButtonOpret_Click" />
             <Button x:Name="ButtonRediger"
                     Content="Rediger"
                     Grid.Column="2"
                     Grid.Row="0"
                     Margin="3"
-                    Visibility="Visible" />
-            <Button x:Name="ButtonGem"
-                    Content="Gem"
-                    Grid.Column="1"
-                    Grid.Row="1"
-                    Margin="3"
-                    Visibility="Visible" />
-            <Button x:Name="ButtonFortryd"
-                    Content="Fortryd"
-                    Grid.Column="2"
-                    Grid.Row="1"
-                    Margin="3"
-                    Visibility="Visible" />
+                    Visibility="Visible"
+                    Click="ButtonRediger_Click" />
+            
         </Grid>
 
-        <TextBox Grid.Column="2"
+        <Label Grid.Column="2"
                  Grid.Row="1"
-                 Text="{Binding selectedCustomer.name}"
+                 Content="{Binding selectedCustomer.name,UpdateSourceTrigger=PropertyChanged}"
                  Margin="3"
                  FontSize="16"
-                 IsReadOnly="True"
+                 
                  HorizontalContentAlignment="Left"
                  VerticalContentAlignment="Center" />
-        <TextBox Grid.Column="2"
+        <Label Grid.Column="2"
                  Grid.Row="2"
-                 Text="{Binding selectedCustomer.address}"
+                 Content="{Binding selectedCustomer.address,UpdateSourceTrigger=PropertyChanged}"
                  Margin="3"
                  FontSize="16"
-                 IsReadOnly="True"
+                 
                  HorizontalContentAlignment="Left"
                  VerticalContentAlignment="Center" />
-        <TextBox Grid.Column="2"
-                 Grid.Row="4"
-                 Text="{Binding selectedCustomer.country.country}"
-                 Margin="3"
-                 FontSize="16"
-                 IsReadOnly="True"
-                 HorizontalContentAlignment="Left"
-                 VerticalContentAlignment="Center" />
-        <TextBox Grid.Column="2"
+        <ComboBox x:Name="countryComboBox"
+                  ItemsSource="{Binding ListCountries}"
+                  Grid.Column="2"
+                  Grid.Row="4"
+                  DisplayMemberPath="country"
+                  SelectedValuePath="country"
+                  SelectedValue="{Binding selectedCustomer.country.country}"
+                  SelectedItem="{Binding selectedCustomer.country}"
+                  IsEnabled="False"
+                  Margin="3"
+                  FontSize="16"
+                  HorizontalContentAlignment="Left"
+                  VerticalContentAlignment="Center" />
+        <Label Grid.Column="2"
                  Grid.Row="5"
-                 Text="{Binding selectedCustomer.phone}"
+                 Content="{Binding selectedCustomer.phone,UpdateSourceTrigger=PropertyChanged}"
                  Margin="3"
                  FontSize="16"
-                 IsReadOnly="True"
+                 
                  HorizontalContentAlignment="Left"
                  VerticalContentAlignment="Center" />
-        <TextBox Grid.Column="2"
+        <Label Grid.Column="2"
                  Grid.Row="6"
-                 Text="{Binding selectedCustomer.mailAdr}"
+                 Content="{Binding selectedCustomer.mailAdr,UpdateSourceTrigger=PropertyChanged}"
                  Margin="3"
                  FontSize="16"
-                 IsReadOnly="True"
+                 
                  HorizontalContentAlignment="Left"
                  VerticalContentAlignment="Center" />
 

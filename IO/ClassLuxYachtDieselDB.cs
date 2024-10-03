@@ -49,10 +49,69 @@ namespace IO
         }
         public void SaveCustomersInDB(ClassCustomer inClassCustomer)
         {
+            int res = 0;
+            string sqlQuery = "INSERT INTO Customers (name, address, city, postalCode, country, phone, mailAdr) " +
+                "VALUES (@name, @address, @city, @postalCode, @country, @phone, @mailAdr) "+
+                "SELECT SCOPE_IDENTITY()";
+            try
+            {
+                using (SqlCommand cmd = new SqlCommand(sqlQuery, _con))
+                {
+                    cmd.Parameters.Add("@name", SqlDbType.NVarChar).Value = inClassCustomer.name;
+                    cmd.Parameters.Add(@"address", SqlDbType.NVarChar).Value =inClassCustomer.address;
+                    cmd.Parameters.Add(@"city", SqlDbType.NVarChar).Value =inClassCustomer.city;
+                    cmd.Parameters.Add(@"postalCode", SqlDbType.NVarChar).Value = inClassCustomer.postalCode;
+                    cmd.Parameters.Add(@"country", SqlDbType.Int).Value=inClassCustomer.country.Id;
+                    cmd.Parameters.Add(@"phone", SqlDbType.NVarChar).Value = inClassCustomer.phone;
+                    cmd.Parameters.Add(@"mailAdr", SqlDbType.NVarChar).Value= inClassCustomer.mailAdr;
+                    OpenDB();
+                    res = Convert.ToInt32(cmd.ExecuteScalar());
+                }
+            }
+            catch (SqlException ex)
+            {
 
+                throw ex;
+            }
+            finally { CloseDB(); }
         }
         public void UpdateCustomerInDB(ClassCustomer inClassCustomer)
         {
+            int res = 0;
+            string sqlQuery = "UPDATE Customers "+
+                "SET name = @name, " +
+                "address = @address, "+
+                "city = @city, " +
+                "postalCode = @postalCode, "+
+                "country = @country, "+
+                "phone = @phone, "+
+                "mailAdr = @mailAdr "+
+                "WHERE Id = @Id";
+            try
+            {
+                using (SqlCommand cmd = new SqlCommand(sqlQuery, _con))
+                {
+                    cmd.Parameters.Add("@name", SqlDbType.NVarChar).Value = inClassCustomer.name;
+                    cmd.Parameters.Add(@"address", SqlDbType.NVarChar).Value =inClassCustomer.address;
+                    cmd.Parameters.Add(@"city", SqlDbType.NVarChar).Value =inClassCustomer.city;
+                    cmd.Parameters.Add(@"postalCode", SqlDbType.NVarChar).Value = inClassCustomer.postalCode;
+                    cmd.Parameters.Add(@"country", SqlDbType.Int).Value=inClassCustomer.country.Id;
+                    cmd.Parameters.Add(@"phone", SqlDbType.NVarChar).Value = inClassCustomer.phone;
+                    cmd.Parameters.Add(@"mailAdr", SqlDbType.NVarChar).Value= inClassCustomer.mailAdr;
+                    cmd.Parameters.Add("@Id", SqlDbType.Int).Value = inClassCustomer.Id;
+                    OpenDB();
+                    if (cmd.ExecuteNonQuery()==1)
+                    {
+                        res = inClassCustomer.Id;
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+
+                throw ex;
+            }
+            finally { CloseDB(); }
 
         }
         #endregion
@@ -63,27 +122,36 @@ namespace IO
             string sqlQuery = "SELECT Suppliers.Id, Suppliers.companyName, Suppliers.contactName, Suppliers.address, Suppliers.city, Suppliers.postalCode, CountryCurrency.Id " + 
                 "AS countryId, CountryCurrency.country, CountryCurrency.countryCode, CountryCurrency.currency, CountryCurrency.currencyCode, Suppliers.phone, Suppliers.mailAdr "+
                 "FROM Suppliers LEFT OUTER JOIN CountryCurrency ON Suppliers.country = CountryCurrency.Id";
-            using (DataTable dt = DBReturnDataTable(sqlQuery))
+            try
             {
-                foreach (DataRow row in dt.Rows)
+                using (DataTable dt = DBReturnDataTable(sqlQuery))
                 {
-                    ClassSupplier cs = new ClassSupplier();
-                    cs.Id = Convert.ToInt32(row["Id"]);
-                    cs.firmName = row["companyName"].ToString();
-                    cs.contactName = row["contactName"].ToString();
-                    cs.address = row["address"].ToString();
-                    cs.city = row["city"].ToString();
-                    cs.postalCode = row["postalCode"].ToString();
-                    cs.country.Id = Convert.ToInt32(row["countryId"]);
-                    cs.country.country = row["country"].ToString();
-                    cs.country.countryCode = row["countryCode"].ToString();
-                    cs.country.currency= row["currency"].ToString();
-                    cs.country.currencyCode=row["currencyCode"].ToString();
-                    cs.phone=row["phone"].ToString();
-                    cs.mailAdr=row["mailAdr"].ToString();
-                    templist.Add(cs);
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        ClassSupplier cs = new ClassSupplier();
+                        cs.Id = Convert.ToInt32(row["Id"]);
+                        cs.firmName = row["companyName"].ToString();
+                        cs.contactName = row["contactName"].ToString();
+                        cs.address = row["address"].ToString();
+                        cs.city = row["city"].ToString();
+                        cs.postalCode = row["postalCode"].ToString();
+                        cs.country.Id = Convert.ToInt32(row["countryId"]);
+                        cs.country.country = row["country"].ToString();
+                        cs.country.countryCode = row["countryCode"].ToString();
+                        cs.country.currency= row["currency"].ToString();
+                        cs.country.currencyCode=row["currencyCode"].ToString();
+                        cs.phone=row["phone"].ToString();
+                        cs.mailAdr=row["mailAdr"].ToString();
+                        templist.Add(cs);
+                    }
                 }
             }
+            catch (SqlException ex)
+            {
+
+                throw ex;
+            }
+            finally { CloseDB(); }
             return templist;
         }
         public void SaveSupplierInDB(ClassSupplier inClassSupplier)
@@ -139,7 +207,7 @@ namespace IO
                     cmd.Parameters.Add("@address", SqlDbType.NVarChar).Value = inClassSupplier.address;
                     cmd.Parameters.Add("@city", SqlDbType.NVarChar).Value=inClassSupplier.city;
                     cmd.Parameters.Add("@postalCode", SqlDbType.NVarChar).Value = inClassSupplier.postalCode;
-                    cmd.Parameters.Add("@country", SqlDbType.Int).Value = inClassSupplier.country;
+                    cmd.Parameters.Add("@country", SqlDbType.Int).Value = inClassSupplier.country.Id;
                     cmd.Parameters.Add("@phone", SqlDbType.NVarChar).Value = inClassSupplier.phone;
                     cmd.Parameters.Add("@mailAdr", SqlDbType.NVarChar).Value = inClassSupplier.mailAdr;
                     cmd.Parameters.Add("@Id", SqlDbType.Int).Value = inClassSupplier.Id;
@@ -245,6 +313,36 @@ namespace IO
             }
             finally { CloseDB(); }
             return tempList;
+        }
+        #endregion
+        #region Country Data Management
+        public List<ClassCountry> GetAllCountryFromDB()
+        {
+            List<ClassCountry> templist = new List<ClassCountry>();
+            string sqlQuery = "SELECT * FROM CountryCurrency";
+            try
+            {
+                using(DataTable dt = DBReturnDataTable(sqlQuery))
+                {
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        ClassCountry tempclass = new ClassCountry();
+                        tempclass.Id = Convert.ToInt32(row["Id"]);
+                        tempclass.country = row["country"].ToString();
+                        tempclass.countryCode = row["countryCode"].ToString();
+                        tempclass.currency = row["currency"].ToString();
+                        tempclass.currencyCode = row["currencyCode"].ToString();
+                        templist.Add(tempclass);
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+
+                throw ex;
+            }
+            finally { CloseDB(); }
+            return templist;
         }
         #endregion
 
